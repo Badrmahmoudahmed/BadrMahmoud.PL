@@ -1,4 +1,5 @@
 ﻿using Demo.BLL.Interfaces;
+using Demo.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BadrMahmoud.PL.Controllers
@@ -13,7 +14,24 @@ namespace BadrMahmoud.PL.Controllers
         }
         public IActionResult Index()
         {
+            var Department = _departmentRepositries.GetAll();
+            return View(Department);
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
             return View();
+        }
+        [HttpPost]
+        public IActionResult Create(Department department)
+        {
+            if (ModelState.IsValid)
+            {
+                _departmentRepositries.Add(department);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(department);
         }
     }
 }
