@@ -1,3 +1,5 @@
+using Demo.BLL.Interfaces;
+using Demo.BLL.Repositries;
 using Demo.DAL.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,6 +29,7 @@ namespace BadrMahmoud.PL
         {
             services.AddControllersWithViews();
             services.AddDbContext<AppDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<IDepartmentRepositries, DepartmentRepositries>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Demo.BLL.Repositries
 {
-    internal class DepartmentRepositries : IDepartmentRepositries
+    public class DepartmentRepositries : IDepartmentRepositries
     {
         private readonly AppDBContext _dbcontext;
 
