@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace Demo.BLL.Interfaces
 {
-    public interface IDepartmentRepositries : IGenaricRepositiry<Department>
+    internal interface IEmployeeReposititry : IGenaricRepositiry<Employee>
     {
-        
     }
 }
