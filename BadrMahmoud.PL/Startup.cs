@@ -30,6 +30,7 @@ namespace BadrMahmoud.PL
             services.AddControllersWithViews();
             services.AddDbContext<AppDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<IDepartmentRepositries, DepartmentRepositries>();
+            services.AddScoped<IEmployeeReposititry , EmployeeRepositry>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

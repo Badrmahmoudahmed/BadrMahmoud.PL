@@ -20,7 +20,7 @@ namespace Demo.DAL.Models
         public int? Age { get; set; }
 
         public string Adress { get; set; }
-
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
         [DataType(DataType.Currency)]
         public decimal Salary { get; set; }
