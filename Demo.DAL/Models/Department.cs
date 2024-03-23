@@ -11,7 +11,7 @@ namespace Demo.DAL.Models
     {
         [Required(ErrorMessage = "Code Req !!")]
         public string Code { get; set; }
-        [Required(ErrorMessage = "Code Req !!")]
+        [Required(ErrorMessage = "Name Req !!")]
         public string Name { get; set; }
         [Display(Name = "Date Of Creation")]
         public DateTime DateofCreation { get; set; }
