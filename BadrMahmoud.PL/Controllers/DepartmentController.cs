@@ -13,7 +13,7 @@ namespace BadrMahmoud.PL.Controllers
         private readonly IDepartmentRepositries _departmentRepositries;
         private readonly IWebHostEnvironment _env;
 
-        public DepartmentController(IDepartmentRepositries departmentRepositries , IWebHostEnvironment env)
+        public DepartmentController(IDepartmentRepositries departmentRepositries, IWebHostEnvironment env)
         {
             _departmentRepositries = departmentRepositries;
             _env = env;
@@ -42,7 +42,7 @@ namespace BadrMahmoud.PL.Controllers
 
         [HttpGet]
 
-        public IActionResult Details(int? id , string viewname = "Details")
+        public IActionResult Details(int? id, string viewname = "Details")
         {
             if (!id.HasValue)
             {
@@ -50,16 +50,16 @@ namespace BadrMahmoud.PL.Controllers
             }
             var department = _departmentRepositries.Get(id.Value);
 
-            if (department is null) 
+            if (department is null)
             {
                 return NotFound();
             }
 
-            return View(viewname,department);
+            return View(viewname, department);
         }
 
         [HttpGet]
-        public IActionResult Edit(int? id) 
+        public IActionResult Edit(int? id)
         {
             return Details(id, "Edit");
 
@@ -67,13 +67,13 @@ namespace BadrMahmoud.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute]int id,Department department)
+        public IActionResult Edit([FromRoute] int id, Department department)
         {
             if (id != department.Id)
             {
                 return BadRequest();
             }
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
             {
                 return View(department);
             }
@@ -85,11 +85,40 @@ namespace BadrMahmoud.PL.Controllers
             }
             catch (Exception ex)
             {
-                if(_env.IsDevelopment())
+                if (_env.IsDevelopment())
                 {
                     ModelState.AddModelError(string.Empty, ex.Message);
                 }
                 else
+                {
+                    ModelState.AddModelError(string.Empty, "There is an Error");
+                }
+                return View(department);
+            }
+        }
+        public IActionResult Delete(int? id)
+        {
+            return Details(id, "Delete");
+        }
+        [HttpPost]
+        public IActionResult Delete(Department department)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(department);
+            }
+            try
+            {
+                _departmentRepositries.Delete(department);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                if(_env.IsDevelopment())
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }else
                 {
                     ModelState.AddModelError(string.Empty, "There is an Error");
                 }
