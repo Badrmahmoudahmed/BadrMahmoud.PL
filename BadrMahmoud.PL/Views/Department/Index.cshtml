@@ -26,21 +26,7 @@
                         <td>@Department.Code</td>
                         <td>@Department.Name</td>
                         <td>@Department.DateofCreation</td>
-                        <td>
-                            <a asp-controller="Department" asp-action="Details" asp-route-id="@Department.Id" class="btn btn-info">
-                                <i class="fas fa-eye"></i> Details
-                            </a>
-                        </td>
-                        <td>
-                            <a asp-controller="Department" asp-action="Edit" asp-route-id="@Department.Id" class="btn btn-warning">
-                                <i class="fa-solid fa-pencil"></i> Update
-                            </a>
-                        </td>
-                        <td>
-                            <a asp-action="Delete" asp-route-id="@Department.Id" class="btn btn-danger">
-                                <i class="fa-solid fa-trash"></i> Delete
-                            </a>
-                        </td>
+                        <partial name="ButtonsViewPartial" model="@Department.Id">
                     </tr>
 
                   
