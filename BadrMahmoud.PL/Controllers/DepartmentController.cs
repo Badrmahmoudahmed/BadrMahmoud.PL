@@ -4,6 +4,7 @@ using Demo.DAL.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
+using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 using System;
 
 namespace BadrMahmoud.PL.Controllers
@@ -21,6 +22,8 @@ namespace BadrMahmoud.PL.Controllers
         public IActionResult Index()
         {
             var Department = _departmentRepositries.GetAll();
+            ViewData[nameof(Message)] = "Hello ViewDate";
+            ViewBag.Message = "hello ViewBag";
             return View(Department);
         }
 

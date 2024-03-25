@@ -3,6 +3,8 @@
     ViewData["Title"] = "Departments";
 }
 
+<div class="alert alert-danger">@ViewData["Message"]</div>
+<div class="alert alert-secondary">@ViewBag.Message</div>
 <h1 class="text-center pb-4">Departments</h1>
 <a asp-action="Create" class="btn btn-success mb-4">Create New Department</a>
 @if (Model.Count() > 0)
