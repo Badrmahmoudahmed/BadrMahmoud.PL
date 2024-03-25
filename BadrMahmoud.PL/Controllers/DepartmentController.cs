@@ -37,7 +37,16 @@ namespace BadrMahmoud.PL.Controllers
         {
             if (ModelState.IsValid)
             {
-                _departmentRepositries.Add(department);
+                int Count = _departmentRepositries.Add(department);
+                if(Count > 0)
+                {
+                    TempData["Message"] = "Department Created Successfully";
+
+                }
+                else
+                {
+                    TempData["Message"] = "An Error Occuerd !";
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(department);
