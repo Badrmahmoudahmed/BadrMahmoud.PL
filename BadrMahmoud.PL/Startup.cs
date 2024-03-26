@@ -1,3 +1,4 @@
+using BadrMahmoud.PL.Helpers;
 using Demo.BLL.Interfaces;
 using Demo.BLL.Repositries;
 using Demo.DAL.Data;
@@ -31,6 +32,8 @@ namespace BadrMahmoud.PL
             services.AddDbContext<AppDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<IDepartmentRepositries, DepartmentRepositries>();
             services.AddScoped<IEmployeeReposititry , EmployeeRepositry>();
+            services.AddAutoMapper(M  => M.AddProfile(new EmployeeProfile()));
+            services.AddAutoMapper(M => M.AddProfile(new DeptMappProfile()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

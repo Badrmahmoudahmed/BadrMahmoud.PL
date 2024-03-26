@@ -1,4 +1,6 @@
-﻿using Demo.BLL.Interfaces;
+﻿using AutoMapper;
+using BadrMahmoud.PL.Models;
+using Demo.BLL.Interfaces;
 using Demo.BLL.Repositries;
 using Demo.DAL.Models;
 using Microsoft.AspNetCore.Hosting;
@@ -15,25 +17,28 @@ namespace BadrMahmoud.PL.Controllers
     {
 
         private readonly IEmployeeReposititry _employeeReposititry;
+        private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _env;
 
-        public EmployeeController(IEmployeeReposititry employeeReposititry ,IWebHostEnvironment env)
+        public EmployeeController(IEmployeeReposititry employeeReposititry ,IMapper mapper ,IWebHostEnvironment env)
         {
             _employeeReposititry = employeeReposititry;
+            _mapper = mapper;
             _env = env;
         }
       
         public IActionResult Index(string SearchInput)
         {
-            var employees = Enumerable.Empty<Employee>();
+            IEnumerable<Employee> employees;
 
 
             if (string.IsNullOrEmpty(SearchInput))
                 employees = _employeeReposititry.GetAll();
             else
                 employees = _employeeReposititry.SearchByName(SearchInput.ToLower());
-            
-            return View(employees);
+
+            var MappedEmp = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmpViewModel>>(employees);
+            return View(MappedEmp);
         }
 
         [HttpGet]
@@ -43,14 +48,15 @@ namespace BadrMahmoud.PL.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(Employee employee)
+        public IActionResult Create(EmpViewModel employeevm)
         {
             if (ModelState.IsValid)
             {
-                _employeeReposititry.Add(employee);
+                var MappedEmp = _mapper.Map<EmpViewModel, Employee>(employeevm);
+                _employeeReposititry.Add(MappedEmp);
                 return RedirectToAction(nameof(Index));
             }
-            return View(employee);
+            return View(employeevm);
         }
 
         [HttpGet]
@@ -67,8 +73,9 @@ namespace BadrMahmoud.PL.Controllers
             {
                 return NotFound();
             }
+            var MappedEmp = _mapper.Map<Employee, EmpViewModel>(employee);
 
-            return View(viewname, employee);
+            return View(viewname, MappedEmp);
         }
 
         [HttpGet]
@@ -80,20 +87,21 @@ namespace BadrMahmoud.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, Employee employee)
+        public IActionResult Edit([FromRoute] int id, EmpViewModel employeevm)
         {
-            if (id != employee.Id)
+            if (id != employeevm.Id)
             {
                 return BadRequest();
             }
             if (!ModelState.IsValid)
             {
-                return View(employee);
+                return View(employeevm);
             }
 
             try
             {
-                _employeeReposititry.Update(employee);
+                var MappedEmp = _mapper.Map<EmpViewModel, Employee>(employeevm);
+                _employeeReposititry.Update(MappedEmp);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -106,7 +114,7 @@ namespace BadrMahmoud.PL.Controllers
                 {
                     ModelState.AddModelError(string.Empty, "There is an Error");
                 }
-                return View(employee);
+                return View(employeevm);
             }
         }
         public IActionResult Delete(int? id)
@@ -114,15 +122,16 @@ namespace BadrMahmoud.PL.Controllers
             return Details(id, "Delete");
         }
         [HttpPost]
-        public IActionResult Delete(Employee employee)
+        public IActionResult Delete(EmpViewModel employeevm)
         {
             if (!ModelState.IsValid)
             {
-                return View(employee);
+                return View(employeevm);
             }
             try
             {
-                _employeeReposititry.Delete(employee);
+                var MappedEmp = _mapper.Map<EmpViewModel, Employee>(employeevm);
+                _employeeReposititry.Delete(MappedEmp);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -136,7 +145,7 @@ namespace BadrMahmoud.PL.Controllers
                 {
                     ModelState.AddModelError(string.Empty, "There is an Error");
                 }
-                return View(employee);
+                return View(employeevm);
             }
         }
     }

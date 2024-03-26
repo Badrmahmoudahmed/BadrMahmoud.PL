@@ -1,4 +1,6 @@
-﻿using Demo.BLL.Interfaces;
+﻿using AutoMapper;
+using BadrMahmoud.PL.Models;
+using Demo.BLL.Interfaces;
 using Demo.BLL.Repositries;
 using Demo.DAL.Models;
 using Microsoft.AspNetCore.Hosting;
@@ -6,17 +8,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 using System;
+using System.Collections.Generic;
 
 namespace BadrMahmoud.PL.Controllers
 {
     public class DepartmentController : Controller
     {
         private readonly IDepartmentRepositries _departmentRepositries;
+        private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _env;
 
-        public DepartmentController(IDepartmentRepositries departmentRepositries, IWebHostEnvironment env)
+        public DepartmentController(IDepartmentRepositries departmentRepositries,IMapper _Mapper, IWebHostEnvironment env)
         {
             _departmentRepositries = departmentRepositries;
+            _mapper = _Mapper;
             _env = env;
         }
         public IActionResult Index()
@@ -24,7 +29,8 @@ namespace BadrMahmoud.PL.Controllers
             var Department = _departmentRepositries.GetAll();
             ViewData[nameof(Message)] = "Hello ViewDate";
             ViewBag.Message = "hello ViewBag";
-            return View(Department);
+            var MappedDept = _mapper.Map<IEnumerable<Department>, IEnumerable<DeptViewModel>>(Department);
+            return View(MappedDept);
         }
 
         [HttpGet]
@@ -33,11 +39,12 @@ namespace BadrMahmoud.PL.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(Department department)
+        public IActionResult Create(DeptViewModel departmentvm)
         {
             if (ModelState.IsValid)
             {
-                int Count = _departmentRepositries.Add(department);
+                var MappedDept = _mapper.Map<DeptViewModel,Department>(departmentvm);
+                int Count = _departmentRepositries.Add(MappedDept);
                 if(Count > 0)
                 {
                     TempData["Message"] = "Department Created Successfully";
@@ -49,7 +56,7 @@ namespace BadrMahmoud.PL.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(department);
+            return View(departmentvm);
         }
 
         [HttpGet]
@@ -66,8 +73,8 @@ namespace BadrMahmoud.PL.Controllers
             {
                 return NotFound();
             }
-
-            return View(viewname, department);
+            var MappedDept = _mapper.Map<Department ,DeptViewModel>(department);
+            return View(viewname, MappedDept);
         }
 
         [HttpGet]
@@ -79,20 +86,21 @@ namespace BadrMahmoud.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, Department department)
+        public IActionResult Edit([FromRoute] int id, DeptViewModel departmentvm)
         {
-            if (id != department.Id)
+            if (id != departmentvm.Id)
             {
                 return BadRequest();
             }
             if (!ModelState.IsValid)
             {
-                return View(department);
+                return View(departmentvm);
             }
 
             try
             {
-                _departmentRepositries.Update(department);
+                var MappedDept = _mapper.Map<DeptViewModel, Department>(departmentvm);
+                _departmentRepositries.Update(MappedDept);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -105,7 +113,7 @@ namespace BadrMahmoud.PL.Controllers
                 {
                     ModelState.AddModelError(string.Empty, "There is an Error");
                 }
-                return View(department);
+                return View(departmentvm);
             }
         }
         public IActionResult Delete(int? id)
@@ -113,15 +121,16 @@ namespace BadrMahmoud.PL.Controllers
             return Details(id, "Delete");
         }
         [HttpPost]
-        public IActionResult Delete(Department department)
+        public IActionResult Delete(DeptViewModel departmentvm)
         {
             if (!ModelState.IsValid)
             {
-                return View(department);
+                return View(departmentvm);
             }
             try
             {
-                _departmentRepositries.Delete(department);
+                var MappedDept = _mapper.Map<DeptViewModel, Department>(departmentvm);
+                _departmentRepositries.Delete(MappedDept);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -134,7 +143,7 @@ namespace BadrMahmoud.PL.Controllers
                 {
                     ModelState.AddModelError(string.Empty, "There is an Error");
                 }
-                return View(department);
+                return View(departmentvm);
             }
         }
     }
