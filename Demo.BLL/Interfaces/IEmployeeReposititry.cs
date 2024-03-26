@@ -9,5 +9,6 @@ namespace Demo.BLL.Interfaces
 {
     public interface IEmployeeReposititry : IGenaricRepositiry<Employee>
     {
+        public IQueryable<Employee> SearchByName(string name);
     }
 }

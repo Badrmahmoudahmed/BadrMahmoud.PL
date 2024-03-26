@@ -1,9 +1,13 @@
 ﻿using Demo.BLL.Interfaces;
+using Demo.BLL.Repositries;
 using Demo.DAL.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BadrMahmoud.PL.Controllers
 {
@@ -18,9 +22,17 @@ namespace BadrMahmoud.PL.Controllers
             _employeeReposititry = employeeReposititry;
             _env = env;
         }
-        public IActionResult Index()
+      
+        public IActionResult Index(string SearchInput)
         {
-            var employees = _employeeReposititry.GetAll();
+            var employees = Enumerable.Empty<Employee>();
+
+
+            if (string.IsNullOrEmpty(SearchInput))
+                employees = _employeeReposititry.GetAll();
+            else
+                employees = _employeeReposititry.SearchByName(SearchInput.ToLower());
+            
             return View(employees);
         }
 
