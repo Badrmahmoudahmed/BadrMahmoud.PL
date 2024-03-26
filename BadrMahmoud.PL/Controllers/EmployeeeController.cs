@@ -13,7 +13,7 @@ namespace BadrMahmoud.PL.Controllers
         private readonly IEmployeeReposititry _employeeReposititry;
         private readonly IWebHostEnvironment _env;
 
-        public EmployeeController(IEmployeeReposititry employeeReposititry, IWebHostEnvironment env)
+        public EmployeeController(IEmployeeReposititry employeeReposititry ,IWebHostEnvironment env)
         {
             _employeeReposititry = employeeReposititry;
             _env = env;
@@ -27,6 +27,7 @@ namespace BadrMahmoud.PL.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            
             return View();
         }
         [HttpPost]

@@ -37,6 +37,10 @@ namespace Demo.BLL.Repositries
 
         public IEnumerable<T> GetAll()
         {
+            if (typeof(T) == typeof(Employee))
+            {
+                return (IEnumerable<T>) _appDBContext.Employees.Include(E => E.Department).AsNoTracking().ToList();
+            }
             return _appDBContext.Set<T>().AsNoTracking().ToList();
         }
 
