@@ -15,14 +15,16 @@ namespace BadrMahmoud.PL.Controllers
 {
     public class EmployeeController : Controller
     {
+        private readonly IUnitofWork _unitofWork;
 
-        private readonly IEmployeeReposititry _employeeReposititry;
+        //private readonly IEmployeeReposititry _employeeReposititry;
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _env;
 
-        public EmployeeController(IEmployeeReposititry employeeReposititry ,IMapper mapper ,IWebHostEnvironment env)
+        public EmployeeController(/*IEmployeeReposititry employeeReposititry ,*/IUnitofWork unitofWork,IMapper mapper ,IWebHostEnvironment env)
         {
-            _employeeReposititry = employeeReposititry;
+            //_employeeReposititry = employeeReposititry;
+            _unitofWork = unitofWork;
             _mapper = mapper;
             _env = env;
         }
@@ -33,9 +35,9 @@ namespace BadrMahmoud.PL.Controllers
 
 
             if (string.IsNullOrEmpty(SearchInput))
-                employees = _employeeReposititry.GetAll();
+                employees = _unitofWork.EmployeeReposititry.GetAll();
             else
-                employees = _employeeReposititry.SearchByName(SearchInput.ToLower());
+                employees = _unitofWork.EmployeeReposititry.SearchByName(SearchInput.ToLower());
 
             var MappedEmp = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmpViewModel>>(employees);
             return View(MappedEmp);
@@ -53,7 +55,8 @@ namespace BadrMahmoud.PL.Controllers
             if (ModelState.IsValid)
             {
                 var MappedEmp = _mapper.Map<EmpViewModel, Employee>(employeevm);
-                _employeeReposititry.Add(MappedEmp);
+                _unitofWork.EmployeeReposititry.Add(MappedEmp);
+                _unitofWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             return View(employeevm);
@@ -67,7 +70,7 @@ namespace BadrMahmoud.PL.Controllers
             {
                 return BadRequest();
             }
-            var employee = _employeeReposititry.Get(id.Value);
+            var employee = _unitofWork.EmployeeReposititry.Get(id.Value);
 
             if (employee is null)
             {
@@ -101,7 +104,8 @@ namespace BadrMahmoud.PL.Controllers
             try
             {
                 var MappedEmp = _mapper.Map<EmpViewModel, Employee>(employeevm);
-                _employeeReposititry.Update(MappedEmp);
+                _unitofWork.EmployeeReposititry.Update(MappedEmp);
+                _unitofWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -131,8 +135,8 @@ namespace BadrMahmoud.PL.Controllers
             try
             {
                 var MappedEmp = _mapper.Map<EmpViewModel, Employee>(employeevm);
-                _employeeReposititry.Delete(MappedEmp);
-
+                _unitofWork.EmployeeReposititry.Delete(MappedEmp);
+                _unitofWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)

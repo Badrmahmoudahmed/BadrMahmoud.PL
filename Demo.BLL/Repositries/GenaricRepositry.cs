@@ -18,16 +18,16 @@ namespace Demo.BLL.Repositries
         {
             _appDBContext = appDBContext;
         }
-        public int Add(T entity)
+        public void Add(T entity)
         {
             _appDBContext.Add(entity);
-            return _appDBContext.SaveChanges();
+ 
         }
 
-        public int Delete(T entity)
+        public void Delete(T entity)
         {
             _appDBContext?.Remove(entity);
-            return _appDBContext.SaveChanges();
+
         }
 
         public T Get(int id)
@@ -44,10 +44,9 @@ namespace Demo.BLL.Repositries
             return _appDBContext.Set<T>().AsNoTracking().ToList();
         }
 
-        public int Update(T entity)
+        public void Update(T entity)
         {
              _appDBContext.Update(entity);
-            return _appDBContext.SaveChanges();
         }
     }
 }

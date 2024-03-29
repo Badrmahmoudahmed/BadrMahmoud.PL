@@ -14,19 +14,22 @@ namespace BadrMahmoud.PL.Controllers
 {
     public class DepartmentController : Controller
     {
-        private readonly IDepartmentRepositries _departmentRepositries;
+        private readonly IUnitofWork _unitofWork;
+
+        //private readonly IDepartmentRepositries _departmentRepositries;
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _env;
 
-        public DepartmentController(IDepartmentRepositries departmentRepositries,IMapper _Mapper, IWebHostEnvironment env)
+        public DepartmentController(/*IDepartmentRepositries departmentRepositries*/IUnitofWork unitofWork,IMapper _Mapper, IWebHostEnvironment env)
         {
-            _departmentRepositries = departmentRepositries;
+            //_departmentRepositries = departmentRepositries;
+            _unitofWork = unitofWork;
             _mapper = _Mapper;
             _env = env;
         }
         public IActionResult Index()
         {
-            var Department = _departmentRepositries.GetAll();
+            var Department = _unitofWork.DepartmentRepositiry.GetAll();
             ViewData[nameof(Message)] = "Hello ViewDate";
             ViewBag.Message = "hello ViewBag";
             var MappedDept = _mapper.Map<IEnumerable<Department>, IEnumerable<DeptViewModel>>(Department);
@@ -44,8 +47,9 @@ namespace BadrMahmoud.PL.Controllers
             if (ModelState.IsValid)
             {
                 var MappedDept = _mapper.Map<DeptViewModel,Department>(departmentvm);
-                int Count = _departmentRepositries.Add(MappedDept);
-                if(Count > 0)
+                _unitofWork.DepartmentRepositiry.Add(MappedDept);
+                int Count = _unitofWork.SaveChange();
+                if (Count > 0)
                 {
                     TempData["Message"] = "Department Created Successfully";
 
@@ -67,7 +71,7 @@ namespace BadrMahmoud.PL.Controllers
             {
                 return BadRequest();
             }
-            var department = _departmentRepositries.Get(id.Value);
+            var department = _unitofWork.DepartmentRepositiry.Get(id.Value);
 
             if (department is null)
             {
@@ -100,7 +104,8 @@ namespace BadrMahmoud.PL.Controllers
             try
             {
                 var MappedDept = _mapper.Map<DeptViewModel, Department>(departmentvm);
-                _departmentRepositries.Update(MappedDept);
+                _unitofWork.DepartmentRepositiry.Update(MappedDept);
+                _unitofWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -130,7 +135,8 @@ namespace BadrMahmoud.PL.Controllers
             try
             {
                 var MappedDept = _mapper.Map<DeptViewModel, Department>(departmentvm);
-                _departmentRepositries.Delete(MappedDept);
+                _unitofWork.DepartmentRepositiry.Delete(MappedDept);
+                _unitofWork.Complete();
 
                 return RedirectToAction(nameof(Index));
             }

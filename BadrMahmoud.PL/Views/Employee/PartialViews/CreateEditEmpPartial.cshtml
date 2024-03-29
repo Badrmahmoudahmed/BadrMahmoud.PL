@@ -1,8 +1,8 @@
 ﻿@model EmpViewModel
-@inject IDepartmentRepositries _departmentRepositries
+@inject IUnitofWork _unitofwork
 @{
     
-    var Departments = new SelectList(_departmentRepositries.GetAll(), nameof(Department.Id), nameof(Department.Name));
+    var Departments = new SelectList(_unitofwork.DepartmentRepositiry.GetAll(), nameof(Department.Id), nameof(Department.Name));
 }
 <div class="form-group">
     <label asp-for="Name" for="Name" class="form-label"></label>

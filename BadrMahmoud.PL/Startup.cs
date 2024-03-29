@@ -30,8 +30,9 @@ namespace BadrMahmoud.PL
         {
             services.AddControllersWithViews();
             services.AddDbContext<AppDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddScoped<IDepartmentRepositries, DepartmentRepositries>();
-            services.AddScoped<IEmployeeReposititry , EmployeeRepositry>();
+            //services.AddScoped<IDepartmentRepositries, DepartmentRepositries>();
+            //services.AddScoped<IEmployeeReposititry , EmployeeRepositry>();
+            services.AddScoped<IUnitofWork, UnitofWork>();
             services.AddAutoMapper(M  => M.AddProfile(new EmployeeProfile()));
             services.AddAutoMapper(M => M.AddProfile(new DeptMappProfile()));
         }
