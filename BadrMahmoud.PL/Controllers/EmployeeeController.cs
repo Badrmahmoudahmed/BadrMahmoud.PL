@@ -32,12 +32,12 @@ namespace BadrMahmoud.PL.Controllers
         public IActionResult Index(string SearchInput)
         {
             IEnumerable<Employee> employees;
-
+            var EmpRepo = _unitofWork.Repositiry<Employee>() as EmployeeRepositry;
 
             if (string.IsNullOrEmpty(SearchInput))
-                employees = _unitofWork.EmployeeReposititry.GetAll();
+                employees = EmpRepo.GetAll();
             else
-                employees = _unitofWork.EmployeeReposititry.SearchByName(SearchInput.ToLower());
+                employees = EmpRepo.SearchByName(SearchInput.ToLower());
 
             var MappedEmp = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmpViewModel>>(employees);
             return View(MappedEmp);
@@ -55,7 +55,7 @@ namespace BadrMahmoud.PL.Controllers
             if (ModelState.IsValid)
             {
                 var MappedEmp = _mapper.Map<EmpViewModel, Employee>(employeevm);
-                _unitofWork.EmployeeReposititry.Add(MappedEmp);
+                _unitofWork.Repositiry<Employee>().Add(MappedEmp);
                 _unitofWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
@@ -70,7 +70,7 @@ namespace BadrMahmoud.PL.Controllers
             {
                 return BadRequest();
             }
-            var employee = _unitofWork.EmployeeReposititry.Get(id.Value);
+            var employee = _unitofWork.Repositiry<Employee>().Get(id.Value);
 
             if (employee is null)
             {
@@ -104,7 +104,7 @@ namespace BadrMahmoud.PL.Controllers
             try
             {
                 var MappedEmp = _mapper.Map<EmpViewModel, Employee>(employeevm);
-                _unitofWork.EmployeeReposititry.Update(MappedEmp);
+                _unitofWork.Repositiry<Employee>().Update(MappedEmp);
                 _unitofWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
@@ -135,7 +135,7 @@ namespace BadrMahmoud.PL.Controllers
             try
             {
                 var MappedEmp = _mapper.Map<EmpViewModel, Employee>(employeevm);
-                _unitofWork.EmployeeReposititry.Delete(MappedEmp);
+                _unitofWork.Repositiry<Employee>().Delete(MappedEmp);
                 _unitofWork.Complete();
                 return RedirectToAction(nameof(Index));
             }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Demo.DAL.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,10 +9,11 @@ namespace Demo.BLL.Interfaces
 {
     public interface IUnitofWork : IDisposable
     {
-        public IEmployeeReposititry EmployeeReposititry { get; set; }
-        public IDepartmentRepositries DepartmentRepositiry { get; set; }
+        //public IEmployeeReposititry EmployeeReposititry { get; set; }
+        //public IDepartmentRepositries DepartmentRepositiry { get; set; }
 
-        void Complete();
+        IGenaricRepositiry<T> Repositiry<T>() where T : ModelBase;
+        int Complete();
         int SaveChange();
     }
 }

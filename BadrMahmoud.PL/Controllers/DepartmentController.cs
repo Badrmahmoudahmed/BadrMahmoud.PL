@@ -29,7 +29,7 @@ namespace BadrMahmoud.PL.Controllers
         }
         public IActionResult Index()
         {
-            var Department = _unitofWork.DepartmentRepositiry.GetAll();
+            var Department = _unitofWork.Repositiry<Department>().GetAll();
             ViewData[nameof(Message)] = "Hello ViewDate";
             ViewBag.Message = "hello ViewBag";
             var MappedDept = _mapper.Map<IEnumerable<Department>, IEnumerable<DeptViewModel>>(Department);
@@ -47,7 +47,7 @@ namespace BadrMahmoud.PL.Controllers
             if (ModelState.IsValid)
             {
                 var MappedDept = _mapper.Map<DeptViewModel,Department>(departmentvm);
-                _unitofWork.DepartmentRepositiry.Add(MappedDept);
+                _unitofWork.Repositiry<Department>().Add(MappedDept);
                 int Count = _unitofWork.SaveChange();
                 if (Count > 0)
                 {
@@ -71,7 +71,7 @@ namespace BadrMahmoud.PL.Controllers
             {
                 return BadRequest();
             }
-            var department = _unitofWork.DepartmentRepositiry.Get(id.Value);
+            var department = _unitofWork.Repositiry<Department>().Get(id.Value);
 
             if (department is null)
             {
@@ -104,7 +104,7 @@ namespace BadrMahmoud.PL.Controllers
             try
             {
                 var MappedDept = _mapper.Map<DeptViewModel, Department>(departmentvm);
-                _unitofWork.DepartmentRepositiry.Update(MappedDept);
+                _unitofWork.Repositiry<Department>().Update(MappedDept);
                 _unitofWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
@@ -135,7 +135,7 @@ namespace BadrMahmoud.PL.Controllers
             try
             {
                 var MappedDept = _mapper.Map<DeptViewModel, Department>(departmentvm);
-                _unitofWork.DepartmentRepositiry.Delete(MappedDept);
+                _unitofWork.Repositiry<Department>().Delete(MappedDept);
                 _unitofWork.Complete();
 
                 return RedirectToAction(nameof(Index));

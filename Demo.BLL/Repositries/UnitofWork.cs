@@ -1,6 +1,8 @@
 ﻿using Demo.BLL.Interfaces;
 using Demo.DAL.Data;
+using Demo.DAL.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,19 +13,20 @@ namespace Demo.BLL.Repositries
     public class UnitofWork : IUnitofWork
     {
         private readonly AppDBContext _appDBContext;
-
-        public IEmployeeReposititry EmployeeReposititry { get; set; }
-        public IDepartmentRepositries DepartmentRepositiry { get; set; }
+        public Hashtable _repositries { get; set; }
+        //public IEmployeeReposititry EmployeeReposititry { get; set; }
+        //public IDepartmentRepositries DepartmentRepositiry { get; set; }
 
         public UnitofWork(AppDBContext appDBContext)
         {
-            DepartmentRepositiry = new DepartmentRepositries(appDBContext);
-            EmployeeReposititry = new EmployeeRepositry(appDBContext);
+            //DepartmentRepositiry = new DepartmentRepositries(appDBContext);
+            //EmployeeReposititry = new EmployeeRepositry(appDBContext);
             _appDBContext = appDBContext;
+            _repositries = new Hashtable();
         }
-        public void Complete()
+        public int Complete()
         {
-            _appDBContext.SaveChanges();
+            return _appDBContext.SaveChanges();
         }
         public int SaveChange()
         {
@@ -33,6 +36,24 @@ namespace Demo.BLL.Repositries
         public void Dispose()
         {
             _appDBContext.Dispose();
+        }
+
+        public IGenaricRepositiry<T> Repositiry<T>() where T : ModelBase
+        {
+            var key = typeof(T).Name;
+            if (!_repositries.ContainsKey(key))
+            {
+                if(key == nameof(Employee))
+                {
+                    var Repo = new EmployeeRepositry(_appDBContext);
+                    _repositries.Add(key, Repo);
+                }else
+                {
+                    var Repo = new GenaricRepositry<T>(_appDBContext);
+                    _repositries.Add(key, Repo);
+                }
+            }
+            return _repositries[key] as IGenaricRepositiry<T>;
         }
     }
 }
