@@ -30,18 +30,18 @@ namespace Demo.BLL.Repositries
 
         }
 
-        public T Get(int id)
+        public async Task<T> Get(int id)
         {
-            return _appDBContext.Set<T>().Find(id);
+            return await _appDBContext.Set<T>().FindAsync(id);
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAll()
         {
             if (typeof(T) == typeof(Employee))
             {
-                return (IEnumerable<T>) _appDBContext.Employees.Include(E => E.Department).AsNoTracking().ToList();
+                return  (IEnumerable<T>) await _appDBContext.Employees.Include(E => E.Department).AsNoTracking().ToListAsync();
             }
-            return _appDBContext.Set<T>().AsNoTracking().ToList();
+            return await _appDBContext.Set<T>().AsNoTracking().ToListAsync();
         }
 
         public void Update(T entity)

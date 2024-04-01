@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace BadrMahmoud.PL.Helpers
 {
     public static class DocumentSetting
     {
-        public static string UploadFile(IFormFile file , string foldername)
+        public static async Task<string> UploadFile(IFormFile file , string foldername)
         {
             string folderpath = Path.Combine(Directory.GetCurrentDirectory(),"wwwroot\\Files", foldername);
 
@@ -21,7 +22,7 @@ namespace BadrMahmoud.PL.Helpers
 
             using var filestream = new FileStream(filepath, FileMode.Create);
 
-            file.CopyTo(filestream);
+            await file.CopyToAsync(filestream);
 
             return filename;
         }
@@ -31,9 +32,9 @@ namespace BadrMahmoud.PL.Helpers
             if(filename is not null && foldername is not null)
             {
                 string filepath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\Files", foldername, filename);
-                if (Directory.Exists(filepath))
+                if (File.Exists(filepath))
                 {
-                    Directory.Delete(filepath);
+                    File.Delete(filepath);
                 }
             }
         }

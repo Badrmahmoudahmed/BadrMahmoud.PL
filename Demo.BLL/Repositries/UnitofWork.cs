@@ -24,18 +24,18 @@ namespace Demo.BLL.Repositries
             _appDBContext = appDBContext;
             _repositries = new Hashtable();
         }
-        public int Complete()
+        public async Task<int> Complete()
         {
-            return _appDBContext.SaveChanges();
+            return await _appDBContext.SaveChangesAsync();
         }
         public int SaveChange()
         {
             return _appDBContext.SaveChanges();
         }
 
-        public void Dispose()
+        public async ValueTask DisposeAsync()
         {
-            _appDBContext.Dispose();
+           await _appDBContext.DisposeAsync();
         }
 
         public IGenaricRepositiry<T> Repositiry<T>() where T : ModelBase

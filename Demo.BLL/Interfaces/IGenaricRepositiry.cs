@@ -9,8 +9,8 @@ namespace Demo.BLL.Interfaces
 {
     public interface IGenaricRepositiry<T>
     {
-        IEnumerable<T> GetAll();
-        T Get(int id);
+        Task<IEnumerable<T>> GetAll();
+        Task<T> Get(int id);
         void Add(T entity);
         void Update(T entity);
         void Delete(T entity);

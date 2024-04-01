@@ -2,7 +2,7 @@
 @inject IUnitofWork _unitofwork
 @{
     
-    var Departments = new SelectList(_unitofwork.Repositiry<Department>().GetAll(), nameof(Department.Id), nameof(Department.Name));
+    var Departments = new SelectList(await _unitofwork.Repositiry<Department>().GetAll(), nameof(Department.Id), nameof(Department.Name));
 }
 <div class="form-group">
     <label asp-for="Image" for="img" class="form-label"></label>

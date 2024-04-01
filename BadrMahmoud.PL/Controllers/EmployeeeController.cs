@@ -6,11 +6,13 @@ using Demo.BLL.Repositries;
 using Demo.DAL.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Razor.Language.Extensions;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BadrMahmoud.PL.Controllers
 {
@@ -30,13 +32,13 @@ namespace BadrMahmoud.PL.Controllers
             _env = env;
         }
       
-        public IActionResult Index(string SearchInput)
+        public async Task<IActionResult> Index(string SearchInput)
         {
             IEnumerable<Employee> employees;
             var EmpRepo = _unitofWork.Repositiry<Employee>() as EmployeeRepositry;
 
             if (string.IsNullOrEmpty(SearchInput))
-                employees = EmpRepo.GetAll();
+                employees = await EmpRepo.GetAll();
             else
                 employees = EmpRepo.SearchByName(SearchInput.ToLower());
 
@@ -51,14 +53,14 @@ namespace BadrMahmoud.PL.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(EmpViewModel employeevm)
+        public async Task<IActionResult> Create(EmpViewModel employeevm)
         {
             if (ModelState.IsValid)
             {
-                employeevm.ImageName = DocumentSetting.UploadFile(employeevm.Image, "Images");
+                employeevm.ImageName = await DocumentSetting.UploadFile(employeevm.Image, "Images");
                 var MappedEmp = _mapper.Map<EmpViewModel, Employee>(employeevm);
                 _unitofWork.Repositiry<Employee>().Add(MappedEmp);
-                _unitofWork.Complete();
+                 await _unitofWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             return View(employeevm);
@@ -66,13 +68,13 @@ namespace BadrMahmoud.PL.Controllers
 
         [HttpGet]
 
-        public IActionResult Details(int? id, string viewname = "Details")
+        public async Task<IActionResult> Details(int? id, string viewname = "Details")
         {
             if (!id.HasValue)
             {
                 return BadRequest();
             }
-            var employee = _unitofWork.Repositiry<Employee>().Get(id.Value);
+            var employee = await _unitofWork.Repositiry<Employee>().Get(id.Value);
 
             if (employee is null)
             {
@@ -85,15 +87,15 @@ namespace BadrMahmoud.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
-            return Details(id, "Edit");
+            return await Details(id, "Edit");
 
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, EmpViewModel employeevm)
+        public async Task<IActionResult> Edit([FromRoute] int id, EmpViewModel employeevm)
         {
             if (id != employeevm.Id)
             {
@@ -108,7 +110,7 @@ namespace BadrMahmoud.PL.Controllers
             {
                 var MappedEmp = _mapper.Map<EmpViewModel, Employee>(employeevm);
                 _unitofWork.Repositiry<Employee>().Update(MappedEmp);
-                _unitofWork.Complete();
+                await _unitofWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -124,12 +126,12 @@ namespace BadrMahmoud.PL.Controllers
                 return View(employeevm);
             }
         }
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            return Details(id, "Delete");
+            return await Details(id, "Delete");
         }
         [HttpPost]
-        public IActionResult Delete(EmpViewModel employeevm)
+        public async Task<IActionResult> Delete(EmpViewModel employeevm)
         {
             if (!ModelState.IsValid)
             {
@@ -140,7 +142,7 @@ namespace BadrMahmoud.PL.Controllers
                 employeevm.ImageName = TempData["ImageName"] as string;
                 var MappedEmp = _mapper.Map<EmpViewModel, Employee>(employeevm);
                 _unitofWork.Repositiry<Employee>().Delete(MappedEmp);
-                int count = _unitofWork.Complete();
+                int count = await _unitofWork.Complete() ;
                 if (count > 0) 
                 {
                     DocumentSetting.DeleteFile(employeevm.ImageName, "Images");

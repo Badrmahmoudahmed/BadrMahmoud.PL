@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BadrMahmoud.PL.Controllers
 {
@@ -27,9 +28,9 @@ namespace BadrMahmoud.PL.Controllers
             _mapper = _Mapper;
             _env = env;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var Department = _unitofWork.Repositiry<Department>().GetAll();
+            var Department = await _unitofWork.Repositiry<Department>().GetAll();
             ViewData[nameof(Message)] = "Hello ViewDate";
             ViewBag.Message = "hello ViewBag";
             var MappedDept = _mapper.Map<IEnumerable<Department>, IEnumerable<DeptViewModel>>(Department);
@@ -65,13 +66,13 @@ namespace BadrMahmoud.PL.Controllers
 
         [HttpGet]
 
-        public IActionResult Details(int? id, string viewname = "Details")
+        public async Task<IActionResult> Details(int? id, string viewname = "Details")
         {
             if (!id.HasValue)
             {
                 return BadRequest();
             }
-            var department = _unitofWork.Repositiry<Department>().Get(id.Value);
+            var department = await _unitofWork.Repositiry<Department>().Get(id.Value);
 
             if (department is null)
             {
@@ -82,15 +83,15 @@ namespace BadrMahmoud.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
-            return Details(id, "Edit");
+            return await Details(id, "Edit");
 
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, DeptViewModel departmentvm)
+        public async Task<IActionResult> Edit([FromRoute] int id, DeptViewModel departmentvm)
         {
             if (id != departmentvm.Id)
             {
@@ -105,7 +106,7 @@ namespace BadrMahmoud.PL.Controllers
             {
                 var MappedDept = _mapper.Map<DeptViewModel, Department>(departmentvm);
                 _unitofWork.Repositiry<Department>().Update(MappedDept);
-                _unitofWork.Complete();
+               await _unitofWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -121,12 +122,12 @@ namespace BadrMahmoud.PL.Controllers
                 return View(departmentvm);
             }
         }
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            return Details(id, "Delete");
+            return await Details(id, "Delete");
         }
         [HttpPost]
-        public IActionResult Delete(DeptViewModel departmentvm)
+        public async Task<IActionResult> Delete(DeptViewModel departmentvm)
         {
             if (!ModelState.IsValid)
             {
@@ -136,7 +137,7 @@ namespace BadrMahmoud.PL.Controllers
             {
                 var MappedDept = _mapper.Map<DeptViewModel, Department>(departmentvm);
                 _unitofWork.Repositiry<Department>().Delete(MappedDept);
-                _unitofWork.Complete();
+                await _unitofWork.Complete();
 
                 return RedirectToAction(nameof(Index));
             }
