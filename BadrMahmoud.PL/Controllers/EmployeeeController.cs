@@ -79,7 +79,8 @@ namespace BadrMahmoud.PL.Controllers
                 return NotFound();
             }
             var MappedEmp = _mapper.Map<Employee, EmpViewModel>(employee);
-
+            if (viewname.Equals("Delete", StringComparison.OrdinalIgnoreCase))
+                TempData["ImageName"] = employee.ImageName;
             return View(viewname, MappedEmp);
         }
 
@@ -136,9 +137,14 @@ namespace BadrMahmoud.PL.Controllers
             }
             try
             {
+                employeevm.ImageName = TempData["ImageName"] as string;
                 var MappedEmp = _mapper.Map<EmpViewModel, Employee>(employeevm);
                 _unitofWork.Repositiry<Employee>().Delete(MappedEmp);
-                _unitofWork.Complete();
+                int count = _unitofWork.Complete();
+                if (count > 0) 
+                {
+                    DocumentSetting.DeleteFile(employeevm.ImageName, "Images");
+                }
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
