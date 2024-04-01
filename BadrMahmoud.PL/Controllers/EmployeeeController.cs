@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BadrMahmoud.PL.Helpers;
 using BadrMahmoud.PL.Models;
 using Demo.BLL.Interfaces;
 using Demo.BLL.Repositries;
@@ -54,6 +55,7 @@ namespace BadrMahmoud.PL.Controllers
         {
             if (ModelState.IsValid)
             {
+                employeevm.ImageName = DocumentSetting.UploadFile(employeevm.Image, "Images");
                 var MappedEmp = _mapper.Map<EmpViewModel, Employee>(employeevm);
                 _unitofWork.Repositiry<Employee>().Add(MappedEmp);
                 _unitofWork.Complete();

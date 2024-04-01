@@ -3,7 +3,7 @@
     ViewData["Title"] = "Create";
 }
 <h1 class="pb-5">Create New Employee</h1>
-<form asp-action="Create">
+<form asp-action="Create" enctype="multipart/form-data">
     <partial name="PartialViews/CreateEditEmpPartial">
     <input type="submit" class="btn btn-outline-primary" value="Create" />
     <a asp-action="Index" class="btn btn-outline-secondary">Back To List <= </a>

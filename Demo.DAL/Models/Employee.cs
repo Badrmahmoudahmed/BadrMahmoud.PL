@@ -16,7 +16,6 @@ namespace Demo.DAL.Models
 
         public string Name { get; set; }
 
-
         public int? Age { get; set; }
 
         public string Adress { get; set; }
@@ -34,5 +33,6 @@ namespace Demo.DAL.Models
 
         public int? DepartmentId { get; set; }
         public Department Department { get; set; }
+        public string ImageName { get; set; }
     }
 }

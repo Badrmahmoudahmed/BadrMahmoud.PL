@@ -1,6 +1,7 @@
 ﻿@model DeptViewModel
 
-<div class="form-group">
+
+<div class="form-group" enctype ="multipart/form-data">
     <label asp-for="Code" for="code" class="form-label"></label>
     <input asp-for="Code" id="code" class="form-control">
     <span asp-validation-for="Code" class="text-danger"></span>
