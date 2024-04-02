@@ -2,9 +2,11 @@ using BadrMahmoud.PL.Helpers;
 using Demo.BLL.Interfaces;
 using Demo.BLL.Repositries;
 using Demo.DAL.Data;
+using Demo.DAL.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,6 +37,8 @@ namespace BadrMahmoud.PL
             services.AddScoped<IUnitofWork, UnitofWork>();
             services.AddAutoMapper(M  => M.AddProfile(new EmployeeProfile()));
             services.AddAutoMapper(M => M.AddProfile(new DeptMappProfile()));
+            services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AppDBContext>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
