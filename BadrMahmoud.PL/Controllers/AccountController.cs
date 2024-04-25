@@ -84,10 +84,30 @@ namespace BadrMahmoud.PL.Controllers
             }
             return View(model);
         }
-        public async new Task<ActionResult> SignOut()
+        public async new Task<IActionResult> SignOut()
         {
              await _signInManager.SignOutAsync();
             return RedirectToAction(nameof(SignIn), "Account");
+        }
+
+        public ActionResult SendResetPasswordEmail()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SendResetPasswordEmail(SendResetPasswordEmilViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user is not null)
+                {
+
+                }
+                ModelState.AddModelError(string.Empty, "Invaild Email");
+            }
+            return View(model);
         }
     }
 }
