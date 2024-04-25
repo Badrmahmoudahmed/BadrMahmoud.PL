@@ -9,11 +9,13 @@ namespace BadrMahmoud.PL.Controllers
     public class AccountController : Controller
     {
 		private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-		public AccountController(UserManager<ApplicationUser> userManager)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
 			_userManager = userManager;
-		}
+            _signInManager = signInManager;
+        }
         public IActionResult SignUp()
         {
             return View();
@@ -52,9 +54,35 @@ namespace BadrMahmoud.PL.Controllers
             return View(model);
         }
 
-        public IActionResult SignIn(SignupViewModel model) 
+        public IActionResult SignIn()
         {
-			return View(model);
-		}
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SignIn(SigninViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user is not null)
+                {
+                    var flag = await _userManager.CheckPasswordAsync(user, model.Passoword);
+                    if (flag)
+                    {
+                        var result = await _signInManager.PasswordSignInAsync(user, model.Passoword, model.RememberMe, false);
+
+                        if (result.Succeeded)
+                            return RedirectToAction(nameof(HomeController.Index), "Home");
+                        if (result.IsNotAllowed)
+                            ModelState.AddModelError(string.Empty, "Ur Account Not Confirmed Yet");
+                    }
+                }
+                ModelState.AddModelError(string.Empty, "Invaild Login");
+
+
+            }
+            return View(model);
+        }
     }
 }
