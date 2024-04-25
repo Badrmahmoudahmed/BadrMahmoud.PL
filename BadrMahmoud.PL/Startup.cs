@@ -38,6 +38,15 @@ namespace BadrMahmoud.PL
             services.AddAutoMapper(M  => M.AddProfile(new EmployeeProfile()));
             services.AddAutoMapper(M => M.AddProfile(new DeptMappProfile()));
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AppDBContext>();
+            services.ConfigureApplicationCookie(o =>
+            {
+                o.LoginPath = "/Account/SignIn";
+                o.ExpireTimeSpan = TimeSpan.FromDays(1);
+                o.AccessDeniedPath = "/Home/Error";
+            }
+
+
+            ) ;
 
         }
 
@@ -58,7 +67,7 @@ namespace BadrMahmoud.PL
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
