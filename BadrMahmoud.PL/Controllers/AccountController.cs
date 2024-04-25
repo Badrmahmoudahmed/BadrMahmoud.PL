@@ -84,5 +84,10 @@ namespace BadrMahmoud.PL.Controllers
             }
             return View(model);
         }
+        public async new Task<ActionResult> SignOut()
+        {
+             await _signInManager.SignOutAsync();
+            return RedirectToAction(nameof(SignIn), "Account");
+        }
     }
 }
