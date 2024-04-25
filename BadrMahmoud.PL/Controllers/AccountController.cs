@@ -1,7 +1,9 @@
 ﻿using BadrMahmoud.PL.Models.User;
+using BadrMahmoud.PL.Services.EmailSender;
 using Demo.DAL.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 
 namespace BadrMahmoud.PL.Controllers
@@ -10,11 +12,15 @@ namespace BadrMahmoud.PL.Controllers
     {
 		private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IConfiguration _configuration;
+        private readonly IEmailSender _emailSender;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration configuration,IEmailSender emailSender)
         {
 			_userManager = userManager;
             _signInManager = signInManager;
+            _configuration = configuration;
+            _emailSender = emailSender;
         }
         public IActionResult SignUp()
         {
@@ -100,14 +106,40 @@ namespace BadrMahmoud.PL.Controllers
         {
             if (ModelState.IsValid)
             {
+               
+                
                 var user = await _userManager.FindByEmailAsync(model.Email);
+                var resetpasswordtoken = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var resetpassworurl = Url.Action("ResetPassword", "Account", new { email = model.Email , token =resetpasswordtoken }, "https", "localhost:44320");
                 if (user is not null)
                 {
-
+                    //await _emailSender.SendAsync("badrmahmoud201312123@gmail.com", model.Email, "Reset UR Password", resetpassworurl);
+                    await _emailSender.SendAsync("badrmahmoud201312@gmail.com", model.Email, "Reset Password", resetpassworurl);
                 }
                 ModelState.AddModelError(string.Empty, "Invaild Email");
             }
             return View(model);
         }
-    }
+
+        public ActionResult ResetPassword(string email , string token)
+        {
+            TempData["Email"] = email;
+            TempData["Token"] = token;
+            return View();
+        }
+        [HttpPost]
+		public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+		{
+            if (ModelState.IsValid)
+            {
+                var email = TempData["Email"] as string;
+                var token = TempData["token"] as string;
+                var user = await _userManager.FindByEmailAsync(email);
+                await _userManager.ResetPasswordAsync(user, token, model.ConfirmPassword);
+				return RedirectToAction(nameof(SignIn), "Account");
+
+			}
+            return View(model);
+		}
+	}
 }

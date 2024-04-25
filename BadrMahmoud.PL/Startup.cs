@@ -1,4 +1,5 @@
 using BadrMahmoud.PL.Helpers;
+using BadrMahmoud.PL.Services.EmailSender;
 using Demo.BLL.Interfaces;
 using Demo.BLL.Repositries;
 using Demo.DAL.Data;
@@ -34,10 +35,11 @@ namespace BadrMahmoud.PL
             services.AddDbContext<AppDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             //services.AddScoped<IDepartmentRepositries, DepartmentRepositries>();
             //services.AddScoped<IEmployeeReposititry , EmployeeRepositry>();
+            services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped<IUnitofWork, UnitofWork>();
             services.AddAutoMapper(M  => M.AddProfile(new EmployeeProfile()));
             services.AddAutoMapper(M => M.AddProfile(new DeptMappProfile()));
-            services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AppDBContext>();
+            services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AppDBContext>().AddDefaultTokenProviders();
             services.ConfigureApplicationCookie(o =>
             {
                 o.LoginPath = "/Account/SignIn";
