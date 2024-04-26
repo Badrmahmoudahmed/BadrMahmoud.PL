@@ -6,7 +6,7 @@ using Demo.DAL.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
-using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
+//using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -31,8 +31,8 @@ namespace BadrMahmoud.PL.Controllers
         public async Task<IActionResult> Index()
         {
             var Department = await _unitofWork.Repositiry<Department>().GetAll();
-            ViewData[nameof(Message)] = "Hello ViewDate";
-            ViewBag.Message = "hello ViewBag";
+            //ViewData["Message"] = "Hello ViewDate";
+            //ViewBag.Message = "hello ViewBag";
             var MappedDept = _mapper.Map<IEnumerable<Department>, IEnumerable<DeptViewModel>>(Department);
             return View(MappedDept);
         }

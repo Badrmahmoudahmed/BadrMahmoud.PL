@@ -31,53 +31,14 @@ namespace BadrMahmoud.PL
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
-            services.AddDbContext<AppDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            //services.AddScoped<IDepartmentRepositries, DepartmentRepositries>();
-            //services.AddScoped<IEmployeeReposititry , EmployeeRepositry>();
-            services.AddTransient<IEmailSender, EmailSender>();
-            services.AddScoped<IUnitofWork, UnitofWork>();
-            services.AddAutoMapper(M  => M.AddProfile(new EmployeeProfile()));
-            services.AddAutoMapper(M => M.AddProfile(new DeptMappProfile()));
-            services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AppDBContext>().AddDefaultTokenProviders();
-            services.ConfigureApplicationCookie(o =>
-            {
-                o.LoginPath = "/Account/SignIn";
-                o.ExpireTimeSpan = TimeSpan.FromDays(1);
-                o.AccessDeniedPath = "/Home/Error";
-            }
-
-
-            ) ;
+            
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-
-            app.UseRouting();
-            app.UseAuthentication();
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-            });
+            
         }
     }
 }
