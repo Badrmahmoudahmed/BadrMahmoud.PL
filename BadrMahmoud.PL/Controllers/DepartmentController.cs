@@ -72,6 +72,7 @@ namespace BadrMahmoud.PL.Controllers
             {
                 return BadRequest();
             }
+            TempData["deptId"] = id; 
             var department = await _unitofWork.Repositiry<Department>().Get(id.Value);
 
             if (department is null)
@@ -85,6 +86,9 @@ namespace BadrMahmoud.PL.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
+            if(id is null)
+                id = (int)TempData["deptId"];
+
             return await Details(id, "Edit");
 
         }

@@ -9,14 +9,14 @@ namespace BadrMahmoud.PL.Models
     {
         public int Id { get; set; }
 
-        [Required (ErrorMessage ="Name is Req Yabny !!")]
+        [Required (ErrorMessage ="Name is Req!!")]
         public string Name { get; set; }
 
-        [Range(20, 30)]
+        [Range(20, 30,ErrorMessage ="Age Must Be Between 20 and 30")]
         public int? Age { get; set; }
 
         public string Adress { get; set; }
-        [DataType(DataType.EmailAddress)]
+        [DataType(DataType.EmailAddress,ErrorMessage ="Email Must be examble@examble.com")]
         public string Email { get; set; }
         [DataType(DataType.Currency)]
         public decimal Salary { get; set; }
@@ -29,6 +29,7 @@ namespace BadrMahmoud.PL.Models
 
         public Gender Gender { get; set; }
 
+        [Required (ErrorMessage ="Department is Req !!")]
         public int? DepartmentId { get; set; }
         public Department Department { get; set; }
 

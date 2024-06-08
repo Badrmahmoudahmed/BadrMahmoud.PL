@@ -115,6 +115,7 @@ namespace BadrMahmoud.PL.Controllers
                 {
                     //await _emailSender.SendAsync("badrmahmoud201312123@gmail.com", model.Email, "Reset UR Password", resetpassworurl);
                     await _emailSender.SendAsync("badrmahmoud201312@gmail.com", model.Email, "Reset Password", resetpassworurl);
+                    return RedirectToAction(nameof(CheckYourInbox));
                 }
                 ModelState.AddModelError(string.Empty, "Invaild Email");
             }
@@ -136,10 +137,15 @@ namespace BadrMahmoud.PL.Controllers
                 var token = TempData["token"] as string;
                 var user = await _userManager.FindByEmailAsync(email);
                 await _userManager.ResetPasswordAsync(user, token, model.ConfirmPassword);
-				return RedirectToAction(nameof(SignIn), "Account");
+				return RedirectToAction(nameof(SignIn));
 
 			}
             return View(model);
 		}
-	}
+
+        public IActionResult CheckYourInbox()
+        {
+            return View();
+        }
+    }
 }

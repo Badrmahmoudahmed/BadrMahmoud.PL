@@ -1,4 +1,72 @@
 ﻿@model SignupViewModel
+
+@{
+    ViewData["Title"] = "SignUp";
+    Layout = "~/Views/Shared/_Authlayout.cshtml";
+}
+
+
+<div asp-validation-summary="ModelOnly"></div>
+
+
+<div class="container p-3 mt-5 border rounded w-75">
+    <form asp-action="SignUp">
+        <h3 class="w-100 text-center rounded font-weight-bold mb-3"> Register Now </h3>
+        <div class="mb-3">
+            <input asp-for="UserName" placeholder="Username" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <input asp-for="FName" placeholder="First Name" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <input asp-for="LName" placeholder="Last Name" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <input class="form-control" asp-for="Email" placeholder="Email" required>
+        </div>
+
+        <div class="mb-3">
+            <input class="form-control" asp-for="Passoword" placeholder="Password" required />
+        </div>
+
+        <div class="mb-3">
+            <input asp-for="ConfirmPassword" placeholder="Confirm Password" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <div class="form-check">
+                <input class="form-check-input" asp-for="IsAgree" id="gridCheck">
+                <label class="form-check-label" for="gridCheck">
+                    Agree All Conditions
+                </label>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center mb-3">
+            <input class="btn btn-success w-100" type="submit" value="SIGNUP" />
+        </div>
+
+    </form>
+
+    <p class="w-100 text-center">Do You Have Account? <a asp-action="SignIn" class="text-success">Login Now!</a></p>
+
+</div>
+
+@section ValidationScriptsSection
+{
+    <partial name="_ValidationScriptsPartial" />
+    @* <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script> *@
+}
+
+
+
+
+
+
+
+
+
+@* @model SignupViewModel
 @{
     ViewData["Title"] = "SignUp";
     Layout = "~/Views/Shared/_Authlayout.cshtml";
@@ -26,6 +94,6 @@
 			<input type="submit" value="SIGNUP">
 		</form>
 		<p>Don't have an Account? <a asp-action="SignIn"> Login Now!</a></p>
-		
+
 	</div>
-</div>
+</div> *@

@@ -75,7 +75,7 @@ namespace BadrMahmoud.PL.Controllers
                 return BadRequest();
             }
             var employee = await _unitofWork.Repositiry<Employee>().Get(id.Value);
-
+            TempData["EmpId"] = id;
             if (employee is null)
             {
                 return NotFound();
@@ -89,6 +89,9 @@ namespace BadrMahmoud.PL.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
+            if (id is null)
+                id = (int)TempData["EmpId"];
+
             return await Details(id, "Edit");
 
         }
@@ -133,10 +136,10 @@ namespace BadrMahmoud.PL.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(EmpViewModel employeevm)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(employeevm);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return View(employeevm);
+            //}
             try
             {
                 employeevm.ImageName = TempData["ImageName"] as string;

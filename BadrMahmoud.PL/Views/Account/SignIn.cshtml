@@ -1,4 +1,70 @@
 ﻿@model SigninViewModel
+
+@{
+    ViewData["Title"] = "SignIn";
+    Layout = "~/Views/Shared/_Authlayout.cshtml";
+}
+
+<div asp-validation-summary="ModelOnly"></div>
+
+
+<div class="container p-3 mt-5 border rounded w-75">
+    <form asp-action="SignIn" method="post">
+        <h3 class="w-100 text-center rounded font-weight-bold mb-3"> Login Now </h3>
+
+        <div class="mb-3">
+            <input class="form-control" asp-for="Email" placeholder="Email" required>
+        </div>
+
+        <div class="mb-3">
+            <input class ="form-control" asp-for="Passoword" placeholder="Password" required />
+        </div>
+        
+
+     
+
+
+
+
+
+        <div class="mb-3">
+            <div class="form-check">
+                <input class="form-check-input" asp-for="RememberMe" id="gridCheck">
+                <label class="form-check-label" for="gridCheck">
+                    Remember Me
+                </label>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center mb-3">
+            <input class="btn btn-success w-50" type="submit" value="SIGNIN" />
+        </div>
+
+        @*   <div class="d-flex justify-content-center mb-3">
+        <a role="button" class="btn btn-google w-50" asp-action="GoogleLogin">Sign In With Google</a>
+        </div>
+
+        <div class="d-flex justify-content-center mb-3">
+        <a role="button" class="fb connect w-50 text-center" asp-action="FacebookLogin">Sign in with Facebook</a>
+        </div> *@
+    </form>
+
+    <p class="w-100 text-center">Don't Have Account? <a asp-action="SignUp" class="text-success">Register Now!</a></p>
+    <p class="w-100 text-center"><a asp-action="SendResetPasswordEmail" class="text-danger">Forget Password</a></p>
+
+</div>
+
+
+@* @section ValidationScriptsSection
+{
+    <partial name="_ValidationScriptsPartial" />
+
+} *@
+
+
+
+
+@* @model SigninViewModel
 @{
     ViewData["Title"] = "SignIn";
     Layout = "~/Views/Shared/_Authlayout.cshtml";
@@ -10,8 +76,8 @@
     <div class="agileits-top">
         <div asp-validation-summary="All"></div>
         <form asp-action="SignIn" method="post">
-            <input class="text email" asp-for="Email" placeholder="Email" required="">
-            <input class="text" asp-for="Passoword" placeholder="Password" required="">
+            <input class="text email" asp-for="Email" placeholder="Email" required>
+            <input class="text" asp-for="Passoword" placeholder="Password" required>
             <div class="wthree-text">
                 <label class="anim">
                     <input asp-for="RememberMe" class="checkbox" required="">
@@ -22,10 +88,12 @@
             <input type="submit" value="SIGNIN">
         </form>
         <p>ForgetPassword? <a asp-action="SendResetPasswordEmail"> Forget Your Password!</a></p>
-        @*  @section ValidationScriptSection
+          @section ValidationScriptSection
         {
         <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
         <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
-        } *@
+        }
+        
     </div>
-</div>
+</div>*@
+
